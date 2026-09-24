@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Keypose Exploration: Efficient Automatic Trajectory Labelling and Cross-Embodiment Policy Transfer.">
+  <meta name="author" content="Yupu Lu, Hang Xu, Yizhou Chen, Jia Pan">
+  <title>Keypose Exploration | Automatic Trajectory Labelling</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="Keypose Exploration home">Keypose Exploration</a>
+      <nav aria-label="Primary navigation">
+        <a href="#following-projects">Following projects</a>
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#resources">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow">Automatic trajectory labelling · keypose guided manipulation</p>
+        <h1>Keypose Exploration</h1>
+        <p class="hero-title">Efficient Automatic Trajectory Labelling and Cross-Embodiment Policy Transfer</p>
+        <p class="authors">Yupu Lu <span>&middot;</span> Hang Xu <span>&middot;</span> Yizhou Chen <span>&middot;</span> Jia Pan</p>
+        <p class="affiliation">School of Computing and Data Science<br>The University of Hong Kong, HKSAR</p>
+
+        <p class="hero-text">
+          An automatic pipeline that lets a vision-language model identify what happens in a
+          demonstration while deterministic trajectory analysis establishes when each key interaction occurs.
+        </p>
+
+        <div class="actions" aria-label="Project links">
+          <a class="button button-primary" href="https://arxiv.org/abs/2606.29028">Paper on arXiv ↗</a>
+          <a class="button button-secondary" href="https://github.com/YupuLu/keypose_labelling">Project repository ↗</a>
+        </div>
+        <p class="status-note"><span class="dot" aria-hidden="true"></span>arXiv:2606.29028 &middot; Project repository available</p>
+
+        <div id="following-projects" class="following-projects">
+          <h2>Following projects</h2>
+          <p><strong>Automatic Labelling for Bimanual Mobile Manipulation</strong> extends trajectory segmentation and visual reasoning to bimanual mobile demonstrations: <a href="https://arxiv.org/abs/2609.24059">Paper ↗</a>, <a href="https://yupulu.github.io/automatic-labelling-web/">Webpage ↗</a>.</p>
+          <p><strong>SSC: A Verifiable Structured Representation for Bimanual Manipulation Labelling</strong> develops a representation for structured subtasks and consistency checks: <a href="https://arxiv.org/abs/2608.04425">Paper ↗</a>.</p>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Project highlights">
+        <div class="hero-card-label">At a glance</div>
+        <div class="hero-stat"><strong>1</strong><span>VLM analysis per task</span></div>
+        <div class="hero-stat"><strong>200</strong><span>Panda demonstrations</span></div>
+        <div class="hero-stat"><strong>3</strong><span>robot embodiments evaluated</span></div>
+      </aside>
+    </section>
+
+    <section id="overview" class="section shell">
+      <div class="section-heading">
+        <p class="eyebrow">Overview</p>
+        <h2>Keyposes make interaction structure usable</h2>
+      </div>
+      <div class="overview-grid">
+        <div>
+          <p class="lead">Keypose based manipulation decomposes a long horizon task into critical end effector poses that act as subgoals for policy learning.</p>
+          <p>Extracting those poses is usually tied to hand coded rules or manual annotation. This project separates semantic event recognition from temporal alignment: a vision-language model describes the task workflow once, and trajectory analysis aligns each event with motion and gripper evidence.</p>
+        </div>
+        <div class="principles">
+          <div class="principle"><span class="principle-number">01</span><div><h3>Describe what happens</h3><p>The VLM decomposes a demonstration into targeting, interaction, and optional result phases.</p></div></div>
+          <div class="principle"><span class="principle-number">02</span><div><h3>Align when it happens</h3><p>Motion and gripper timelines correct frame estimates using physical event signatures.</p></div></div>
+          <div class="principle"><span class="principle-number">03</span><div><h3>Condition and transfer</h3><p>Keypose guided policies select interaction modes, while reachability filters adapt them to a target robot.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="section section-tinted">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">Method</p>
+          <h2>Separate semantic understanding from physical timing</h2>
+          <p class="section-intro">The labelling pipeline is designed for grasp related prehensile manipulation with parallel grippers.</p>
+        </div>
+
+        <div class="method-grid">
+          <article class="method-card"><div class="card-index">01</div><h3>VLM subtask analysis</h3><p>A single representative demonstration is analysed into structured events such as grasp, release, detach, interact, and land.</p><span class="card-tag">What</span></article>
+          <article class="method-card method-card-accent"><div class="card-index">02</div><h3>Trajectory correction</h3><p>Double layer motion segmentation and gripper transitions snap estimated events to precise physical boundaries.</p><span class="card-tag">When</span></article>
+          <article class="method-card"><div class="card-index">03</div><h3>Keypose guided policy</h3><p>Corrected keypose labels condition a diffusion policy and expose distinct modes in multimodal demonstrations.</p><span class="card-tag">How to act</span></article>
+        </div>
+
+        <figure class="wide-figure">
+          <a class="figure-link" href="figures/trajectory_segmentation.png" aria-label="Open the automatic trajectory labelling pipeline figure at full resolution">
+            <img src="figures/trajectory_segmentation.png" alt="Automatic labelling pipeline showing VLM event analysis, motion segmentation, gripper timeline, and corrected keypose phases" width="5002" height="2714" loading="lazy" decoding="async">
+          </a>
+          <figcaption><strong>Automatic trajectory labelling pipeline.</strong> The upper event row provides semantic hypotheses; trajectory and gripper timelines establish the physical boundaries used to correct them. Select the figure to view it at full resolution.</figcaption>
+        </figure>
+
+        <div class="method-detail-grid">
+          <div><h3>Event signatures</h3><p><code>grasp</code> and <code>release</code> follow gripper transitions; <code>detach</code> follows closing and the first lifting motion; <code>interact</code> aligns with the final moving phase before release; and <code>land</code> marks the passive settling of a released object.</p></div>
+          <div><h3>Transfer mechanism</h3><p>The keypose predictor proposes 24 candidates. Candidates are grouped into orientation modes, queried against a reachability map, and filtered before the frozen trajectory policy generates the action.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell keypose-section">
+      <div class="section-heading">
+        <p class="eyebrow">Keypose representation</p>
+        <h2>Interaction moments become policy targets</h2>
+        <p class="section-intro">At each corrected event frame, the keypose records position, continuous orientation, and gripper configuration.</p>
+      </div>
+      <div class="keypose-grid">
+        <figure class="figure-card">
+          <a class="figure-link" href="figures/epi_010.png" aria-label="Open the keypose prediction example at full resolution">
+            <img src="figures/epi_010.png" alt="Square peg insertion example showing predicted keyposes along the end effector path and ground truth grippers" width="1707" height="1290" loading="lazy" decoding="async">
+          </a>
+          <figcaption><strong>Predicted keyposes along an insertion trajectory.</strong> Blue grippers show predictions and red grippers show ground truth at the interaction moments.</figcaption>
+        </figure>
+        <div class="keypose-copy">
+          <div class="keypose-spec"><strong>11D target</strong><span>Position, 6D rotation, and two finger coordinates.</span></div>
+          <div class="keypose-spec"><strong>Structured events</strong><span>Each event connects interacting entities, an event type, and a corrected frame.</span></div>
+          <div class="keypose-spec"><strong>Soft conditioning</strong><span>The keypose steers the policy toward an interaction mode while the policy still generates a continuous trajectory.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experiments" class="section section-dark">
+      <div class="shell">
+        <div class="section-heading section-heading-light">
+          <p class="eyebrow">Experiments</p>
+          <h2>Automatic labels support policy learning and selective transfer</h2>
+          <p class="section-intro">We train on 200 Franka Panda demonstrations from robomimic and evaluate Can and Square on Panda, Kinova3, and UR5e using low dimensional state observations.</p>
+        </div>
+
+        <div class="task-grid">
+          <article class="task-card"><span class="task-label">Can</span><h3>Unimodal pick and place</h3><p>A sanity check with one natural grasp direction and fixed placing positions. Keypose conditioning leaves little room to improve an already strong baseline.</p></article>
+          <article class="task-card task-card-accent"><span class="task-label">Square</span><h3>Multimodal peg insertion</h3><p>Three insertion orientations create distinct demonstration modes. Keyposes make those modes explicit and allow reachability filtering during transfer.</p></article>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <caption>Success rate, mean &plusmn; standard deviation over 9 checkpoints and 50 evaluation episodes per checkpoint.</caption>
+            <thead><tr><th scope="col">Task</th><th scope="col">Method</th><th scope="col">Panda</th><th scope="col">Kinova3</th><th scope="col">UR5e</th></tr></thead>
+            <tbody>
+              <tr><th scope="rowgroup" rowspan="3">Can</th><td>DP</td><td>0.987 &plusmn; 0.014</td><td><strong>0.911 &plusmn; 0.055</strong></td><td><strong>0.960 &plusmn; 0.022</strong></td></tr>
+              <tr><td>KP</td><td>1.000</td><td>0.847 &plusmn; 0.034</td><td>0.891 &plusmn; 0.028</td></tr>
+              <tr><td>KP+Reach</td><td>0.989 &plusmn; 0.014</td><td>0.843 &plusmn; 0.025</td><td>0.913 &plusmn; 0.038</td></tr>
+              <tr class="table-divider"><th scope="rowgroup" rowspan="3">Square</th><td>DP</td><td>0.862 &plusmn; 0.036</td><td>0.220 &plusmn; 0.045</td><td>0.738 &plusmn; 0.103</td></tr>
+              <tr><td>KP</td><td>0.842 &plusmn; 0.052</td><td>0.187 &plusmn; 0.037</td><td>0.758 &plusmn; 0.055</td></tr>
+              <tr><td>KP+Reach</td><td><strong>0.873 &plusmn; 0.035</strong></td><td><strong>0.242 &plusmn; 0.042</strong></td><td><strong>0.829 &plusmn; 0.044</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="finding-grid">
+          <div><strong>On Panda</strong><span>KP and KP+Reach closely match DP, supporting the quality of the automatic labels.</span></div>
+          <div><strong>On UR5e</strong><span>Square improves from 0.738 with DP to 0.829 with KP+Reach when reachable candidates are available.</span></div>
+          <div><strong>On Kinova3</strong><span>Few sampled keyposes are reachable, so the filter often falls back and transfer remains difficult.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell rollout-section">
+      <div class="section-heading">
+        <p class="eyebrow">Qualitative result</p>
+        <h2>Reachability filtering selects among insertion modes</h2>
+        <p class="section-intro">On Square with UR5e, different feasible keypose modes produce different insertion directions while the policy remains frozen.</p>
+      </div>
+      <figure class="wide-figure wide-figure-narrow">
+        <a class="figure-link" href="figures/video_frames_5x7.png" aria-label="Open the Square UR5e rollout comparison at full resolution">
+          <img src="figures/video_frames_5x7.png" alt="Square UR5e rollout comparison showing a diffusion policy trial and two keypose guided reachability filtered trials across seven time points" width="1787" height="1330" loading="lazy" decoding="async">
+        </a>
+        <figcaption><strong>Rollout comparison on Square with UR5e.</strong> The baseline makes a direct insertion and fails in this trial; two KP+Reach trials select different feasible modes and succeed.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section section-tinted limitations-section">
+      <div class="shell">
+        <div class="section-heading"><p class="eyebrow">Scope</p><h2>What the study leaves open</h2></div>
+        <div class="limitations-grid">
+          <div><h3>Keypose scope</h3><p>Keyposes fit grasp, release, and object contact well, but pushing, wiping, pouring, and other continuous-contact behaviours need a broader subtask representation.</p></div>
+          <div><h3>Data and embodiment</h3><p>The study uses two short simulated tasks, low dimensional states, and a small predictor trained on 200 demonstrations. A large embodiment gap can leave too few reachable candidates.</p></div>
+          <div><h3>Future direction</h3><p>Long horizon real robot tasks, stronger predictors, and visual policy inputs would test whether the same decomposition scales beyond this feasibility study.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="section shell resources-section">
+      <div class="section-heading"><p class="eyebrow">Resources</p><h2>Paper and release links</h2></div>
+      <div class="resources-grid">
+        <div class="resource-list">
+          <a class="resource-link" href="https://arxiv.org/abs/2606.29028"><span>Paper on arXiv</span><span aria-hidden="true">↗</span></a>
+          <a class="resource-link" href="https://github.com/YupuLu/keypose_labelling"><span>Project repository</span><span aria-hidden="true">↗</span></a>
+          <div class="resource-link resource-pending"><span>Poster and supplementary material</span><abbr title="To be released">TBR</abbr></div>
+        </div>
+        <div class="citation-box">
+          <div class="citation-heading"><span>BibTeX</span><span class="small-note">arXiv preprint</span></div>
+          <pre><code>@article{lu2026Keypose,
+  title={Keypose Exploration: Efficient Automatic Trajectory Labelling and Cross-Embodiment Policy Transfer},
+  author={Lu, Yupu and Xu, Hang and Chen, Yizhou and Pan, Jia},
+  journal={arXiv preprint arXiv:2606.29028},
+  year={2026}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tinted related-section" aria-labelledby="related-title">
+      <div class="shell">
+        <div class="section-heading"><p class="eyebrow">Further work</p><h2 id="related-title">Related links</h2></div>
+        <div class="related-list">
+          <div class="related-item"><strong>Automatic Labelling for Bimanual Mobile Manipulation</strong><a href="https://arxiv.org/abs/2609.24059">Paper ↗</a><a href="https://yupulu.github.io/automatic-labelling-web/">Project page ↗</a></div>
+          <div class="related-item"><strong>SSC: A Verifiable Structured Representation for Bimanual Manipulation Labelling</strong><a href="https://arxiv.org/abs/2608.04425">Paper ↗</a></div>
+        </div>
+        <div class="connection-note">do
+          <h3>How they connect</h3>
+          <p>KeyPose identifies and aligns sparse grasp related events for policy learning. Automatic Labelling extends the annotation pipeline to asynchronous arm, base, and torso activity in bimanual mobile manipulation. SSC provides the structured representation and consistency checks that could support verification of these annotations.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="shell footer-inner"><span>Keypose Exploration</span><span>Yupu Lu, Hang Xu, Yizhou Chen, Jia Pan &middot; The University of Hong Kong</span></div></footer>
+</body>
+</html>
